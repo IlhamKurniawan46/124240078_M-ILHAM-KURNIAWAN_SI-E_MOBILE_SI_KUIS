@@ -108,7 +108,7 @@ class _DetailPageState extends State<DetailPage> {
             //Harga per pcs
             Text(
               'Rp ${widget.item.formattedPrice} / pcs',
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 14, color: Colors.green),
             ),
             const SizedBox(height: 12),
 
@@ -151,26 +151,6 @@ class _DetailPageState extends State<DetailPage> {
               ),
             ),
             const SizedBox(height: 16),
-
-            //Ringkasan Total Harga Saat Ini
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Total',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  'Rp ${widget.item.formattedPrice}',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
 
             // 7. Tombol Simpan Perubahan Porsi
             SizedBox(
