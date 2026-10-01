@@ -11,18 +11,22 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
-  late TextEditingController _stockController;
   late TextEditingController _descController;
+  late TextEditingController _stockController;
+  late TextEditingController _priceController;
 
   @override
   void initState() {
     super.initState();
     // Mengisi input controller
+    _descController = TextEditingController(
+      text: widget.item.description.toString(),
+    );
     _stockController = TextEditingController(
       text: widget.item.stock.toString(),
     );
-    _descController = TextEditingController(
-      text: widget.item.description.toString(),
+    _priceController = TextEditingController(
+      text: widget.item.price.toString(),
     );
   }
 
@@ -30,39 +34,49 @@ class _DetailPageState extends State<DetailPage> {
   void dispose() {
     _stockController.dispose();
     _descController.dispose();
+    _priceController.dispose();
     super.dispose();
   }
 
-  void _simpanStock() {
+  void _simpan() {
+    String newDesc = _descController.text;
     int? newStock = int.tryParse(_stockController.text);
-    if (newStock != null && newStock >= 0) {
+    int? newPrice = int.tryParse(_priceController.text);
+
+    setState(() {
+      widget.item.description = newDesc;
+    });
+
+    if (newStock != null && newStock >= 0 && newPrice != null && newPrice >=0) {
       setState(() {
-        // Mengubah porsi item
         widget.item.stock = newStock;
       });
 
+      setState(() {
+        widget.item.stock = newPrice;
+      });
+      
+
       // Menampilkan snackbar pemberitahuan
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Jumlah stok berhasil diperbarui!')),
+        const SnackBar(content: Text('Detail berhasil diperbarui!')),
       );
 
       // Kembali ke Halaman Beranda
       Navigator.pop(context, true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Masukkan jumlah stok yang valid!')),
+        const SnackBar(content: Text('Masukkan detail yang valid!')),
       );
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-              widget.item.name,
+          widget.item.name,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue,
@@ -73,7 +87,7 @@ class _DetailPageState extends State<DetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Gambar Makanan
+            // Gambar
             ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Image.network(
@@ -85,51 +99,47 @@ class _DetailPageState extends State<DetailPage> {
                   return Container(
                     height: 220,
                     color: Colors.grey[300],
-                    child: const Icon(Icons.fastfood, size: 80, color: Colors.grey),
+                    child: const Icon(
+                      Icons.fastfood,
+                      size: 80,
+                      color: Colors.grey,
+                    ),
                   );
                 },
               ),
             ),
             const SizedBox(height: 16),
 
-            // 2. Nama Makanan
+            //Nama Barang
             Text(
               widget.item.name,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
 
-            // 3. Harga per Porsi
+            //Harga per pcs
             Text(
-              'Rp ${widget.item.formattedPrice} / porsi',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              'Rp ${widget.item.formattedPrice} / pcs',
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
             const SizedBox(height: 12),
 
-            // 4. Deskripsi Makanan
-            Text(
-              widget.item.description,
-              style: const TextStyle(fontSize: 14),
-            ),
+            //Deskripsi
+            Text(widget.item.description, style: const TextStyle(fontSize: 14)),
             const SizedBox(height: 20),
 
+            // Input Field untuk Mengubah Deskripsi
             TextField(
               controller: _descController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.text,
               decoration: const InputDecoration(
-                labelText: 'Stok tersedia (pcs)',
+                labelText: 'Deskripsi',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.edit_note),
               ),
             ),
             const SizedBox(height: 16),
 
-            // 5. Input Field untuk Mengubah Jumlah Porsi
+            //Input Field untuk Mengubah Jumlah Stock
             TextField(
               controller: _stockController,
               keyboardType: TextInputType.number,
@@ -141,7 +151,19 @@ class _DetailPageState extends State<DetailPage> {
             ),
             const SizedBox(height: 16),
 
-            // 6. Ringkasan Total Harga Saat Ini
+            //Input Field untuk Mengubah Harga
+            TextField(
+              controller: _priceController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Harga (pcs)',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.edit_note),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            //Ringkasan Total Harga Saat Ini
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -166,15 +188,14 @@ class _DetailPageState extends State<DetailPage> {
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
-                onPressed: _simpanStock,
+                onPressed: _simpan,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: 
-                const Text(
+                child: const Text(
                   'Simpan',
                   style: TextStyle(
                     fontSize: 16,

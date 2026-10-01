@@ -41,7 +41,7 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Pelanggan Setia Resto',
+                'Pemilik Toko Alat Tulis',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
