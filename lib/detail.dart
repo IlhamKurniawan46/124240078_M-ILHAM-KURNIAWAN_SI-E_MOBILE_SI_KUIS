@@ -13,7 +13,6 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   late TextEditingController _descController;
   late TextEditingController _stockController;
-  late TextEditingController _priceController;
 
   @override
   void initState() {
@@ -25,37 +24,27 @@ class _DetailPageState extends State<DetailPage> {
     _stockController = TextEditingController(
       text: widget.item.stock.toString(),
     );
-    _priceController = TextEditingController(
-      text: widget.item.price.toString(),
-    );
   }
 
   @override
   void dispose() {
     _stockController.dispose();
     _descController.dispose();
-    _priceController.dispose();
     super.dispose();
   }
 
   void _simpan() {
     String newDesc = _descController.text;
     int? newStock = int.tryParse(_stockController.text);
-    int? newPrice = int.tryParse(_priceController.text);
 
     setState(() {
       widget.item.description = newDesc;
     });
 
-    if (newStock != null && newStock >= 0 && newPrice != null && newPrice >=0) {
+    if (newStock != null && newStock >= 0) {
       setState(() {
         widget.item.stock = newStock;
       });
-
-      setState(() {
-        widget.item.stock = newPrice;
-      });
-      
 
       // Menampilkan snackbar pemberitahuan
       ScaffoldMessenger.of(context).showSnackBar(
@@ -153,7 +142,7 @@ class _DetailPageState extends State<DetailPage> {
 
             //Input Field untuk Mengubah Harga
             TextField(
-              controller: _priceController,
+              // controller: _priceController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Harga (pcs)',
